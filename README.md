@@ -15,4 +15,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
 
+Team Member (DataZoo): Tingyan Xiang, Hetian Bai, Jieyu Wang, Cong Liu
+Industral Metor: Ph.D Andrew Marchese 
+
 ![Logo](pics/logo_image.png) 
