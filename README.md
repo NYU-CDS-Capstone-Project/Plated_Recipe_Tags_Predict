@@ -1,5 +1,4 @@
-# Predict Tags by Learning Recipe Embeddings  
-![Logo](pics/logo_image.png) 
+# Predict Tags by Learning Recipe Embeddings  ![Logo](pics/logo_image.png) 
 
 This is capstone project repository collaborated with Plated. Our goal is to help Plated to build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We utilized mutiple models to obtain a comprehensive recipe representation, using the representation to predict multiple tags. 
 
