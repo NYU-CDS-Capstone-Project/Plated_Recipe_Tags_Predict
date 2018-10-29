@@ -4,7 +4,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 
 ## Model
 * Recipe1M-instruction data: A Skip-Gram model to learn recipe language embeddings 
-* Cooking instruction data: A Two-Stage LSTM to obtain intruction embedding using self-pretrained word2vec model
+* Cooking instruction data: A Two-Stage LSTM to obtain intruction embedding using self-pretrained recipe language embeddings
 * Dish Image: A deep neural network (Resnet 50) to learn recipe image representation
 
 ## Data
