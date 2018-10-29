@@ -11,7 +11,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
 * [Cooking Insturctions](/data/data_sample.pdf)
 * [Dish Images](/data/data_sample.pdf)
-* Tags: includes cuicine, cooking difficulty levels, etc. [More](/data/Tags_structure_self.csv)
+* [Tags](/data/Tags_structure_self.csv): includes cuicine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
 
