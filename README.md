@@ -1,5 +1,5 @@
-![](pics/Plated-Logo-Sized.png) 
 # Predict Tags by Learning Recipe Embeddings
+![Logo](pics/Plated-Logo-Sized.png) 
 This is capstone project repository collaborated with Plated. Our goal is to help Plated to build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We utilized mutiple models to obtain a comprehensive recipe representation, using the representation to predict multiple tags. 
 
 ## Model
@@ -8,9 +8,9 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * Dish Image: A deep neural network (Resnet 50) to learn recipe image representation
 
 ## Data
-*
-* 
-*
+* [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
+* Cooking Insturctions 
+* Dish Images 
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
