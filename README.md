@@ -1,6 +1,6 @@
 # Predict Tags by Learning Recipe Embeddings  
 
-This is capstone project repository collaborated with Plated. Our goal is to help Plated to build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We utilized mutiple models to obtain a comprehensive recipe representation, using the representation to predict multiple tags. 
+This is capstone project repository collaborated with Plated. Our goal is to help Plated to build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We utilized mutiple deep learning models to obtain comprehensive recipe representations, then use the representation to predict multiple tags. 
 
 ## Model
 * Recipe1M-instruction data: A Skip-Gram model to learn recipe language embeddings 
