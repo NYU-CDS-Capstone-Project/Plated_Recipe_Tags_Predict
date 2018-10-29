@@ -9,8 +9,8 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 
 ## Data
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
-* Cooking Insturctions 
-* Dish Images 
+* [Cooking Insturctions](/data/data_sample.pdf)
+* Dish Images (/data/data_sample.pdf)
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
