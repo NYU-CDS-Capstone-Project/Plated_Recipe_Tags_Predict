@@ -12,6 +12,16 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * [Cooking Insturctions](/data/data_sample.pdf)
 * [Dish Images](/data/data_sample.pdf)
 * [Tags](/data/Tags_structure_self.csv): includes cuicine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
+
+## Work Process 
+- [x] Data Preprocessing and Analysis
+- [x] Model (baseline) on Intruction Data to predict cuicine 
+- [ ] Train Recipe Language Embeddings
+- [ ] Retrain and improve Intruction Model using pretrained embedding
+- [ ] Image processing
+- [ ] Build model for image representation 
+- [ ] Multi-tasking model to predict multiple tags
+
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
 
