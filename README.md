@@ -11,7 +11,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
 * [Cooking Insturctions](/data/data_sample.pdf)
 * [Dish Images](/data/data_sample.pdf)
-* [Tags](/data/Tags_structure_self.csv): includes crucine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
+* [Tags](/data/Tags_structure_self.csv): includes cuisine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
 
 ## Work Process 
 - [x] Data Preprocessing and Analysis
