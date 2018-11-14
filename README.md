@@ -11,7 +11,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
 * [Cooking Insturctions](/data/data_sample.pdf)
 * [Dish Images](/data/data_sample.pdf)
-* [Tags](/data/Tags_structure_self.csv): includes crucine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
+* [Tags](/data/Tags_structure_self.csv): includes cuisine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
 
 ## Work Process 
 - [x] Data Preprocessing and Analysis
@@ -23,9 +23,9 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 - [ ] Multi-tasking model to predict multiple tags
 
 ## Memo
-Our team collaborated with Plated. We have discussed our project in detail with the data science team from Plated, and Doctor Marchese meets with us weekly (biweekly  sometimes)  as our supervisor.  For our project, the main task is to predict tags for recipes and achieve reasonable embeddings at the same time. There are some classes for tags, such as cuisine style and difficulty level, and we have recipe data including text and pictures from Plated. With respect to evaluation, metrics, such as accuracy and AUC, will be used to measure results of our models. Besides, Plated may take advantage of hidden representation from our models to do recommendation and test the quality of hidden representation. 
+Our team collaborated with Plated. We have discussed our project in detail with the data science team from Plated, and Dr. Marchese meets with us weekly (biweekly  sometimes)  as our supervisor.  For our project, the main task is to predict tags for recipes and achieve reasonable embeddings at the same time. There are some classes for tags, such as cuisine style and difficulty level, and we have recipe data including text and pictures from Plated. With respect to evaluation, metrics, such as accuracy and AUC, will be used to measure results of our models. Besides, Plated may take advantage of hidden representation from our models to do recommendation and test the quality of hidden representation. 
 
-So far, we have finished data collection, data clean and part of modeling work. We got all necessary data from Plated and preprocessed text data. With instruction data and cuisine tags, we have built binary classification models, and achieved above 80% AUC for most cuisine tags. Based on binary classification models, we have build a multi-task model for all cuisine tags, which outperforms the single binary classification model for some tags. In the following time, we plan to train ourself word embeddings in the recipe domain and use pictures data in our model. 
+So far, we have finished data collection, data cleaning and part of modeling work. We got all necessary data from Plated and preprocessed text data. With instruction data and cuisine tags, we have built binary classification models, and achieved above 80% AUC for most cuisine tags. Based on binary classification models, we have build a multi-task model for all cuisine tags, which outperforms the single binary classification model for some tags. Next, we plan to train ourself word embeddings in the recipe domain on Recipe1M and use image data in our model. 
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
