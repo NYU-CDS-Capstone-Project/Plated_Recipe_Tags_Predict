@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset
+from functools import partial
+from collections import Counter, defaultdict
 
 class IntructionDataset(Dataset):
     """
@@ -20,6 +22,7 @@ class IntructionDataset(Dataset):
         """
         self.data_list = data_list
         self.tags_list = tags_list
+        self.max_sent_len = max_sent_len
         assert (len(self.data_list) == len(self.tags_list))
 
     def __len__(self):
@@ -30,12 +33,12 @@ class IntructionDataset(Dataset):
         Triggered when you call recipie[i]
         """
         recipie = self.data_list[key]
-        step1_idx = recipie[0][:max_sent_len[0]]
-        step2_idx = recipie[1][:max_sent_len[1]]
-        step3_idx = recipie[2][:max_sent_len[2]]
-        step4_idx = recipie[3][:max_sent_len[3]]       
-        step5_idx = recipie[4][:max_sent_len[4]]
-        step6_idx = recipie[5][:max_sent_len[5]]
+        step1_idx = recipie[0][:self.max_sent_len[0]]
+        step2_idx = recipie[1][:self.max_sent_len[1]]
+        step3_idx = recipie[2][:self.max_sent_len[2]]
+        step4_idx = recipie[3][:self.max_sent_len[3]]       
+        step5_idx = recipie[4][:self.max_sent_len[4]]
+        step6_idx = recipie[5][:self.max_sent_len[5]]
         label = self.tags_list[key]
         return [[step1_idx, step2_idx, step3_idx, step4_idx, step5_idx, step6_idx], 
                 [len(step1_idx),len(step2_idx), len(step3_idx),len(step4_idx), len(step5_idx),len(step6_idx)], 

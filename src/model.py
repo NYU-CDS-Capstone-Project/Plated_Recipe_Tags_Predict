@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset
+from sklearn.metrics import roc_auc_score
 
 def create_emb_layer(weights_matrix, trainable=False):
     vocab_size, emb_dim = weights_matrix.size()

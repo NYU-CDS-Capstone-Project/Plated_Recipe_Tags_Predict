@@ -4,6 +4,7 @@ import string
 import pickle as pkl
 import random
 from collections import Counter, defaultdict
+from nltk.tokenize import word_tokenize
 
 # lowercase and remove punctuation
 def tokenizer(sent):
