@@ -90,8 +90,8 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
                 # train_ACC_list.append(train_acc)
                 
                 # early stop
-                if max_val_auc < val_auc:
-                    max_val_auc = val_auc
+                if max_val_auc < val_auc[task_id]:
+                    max_val_auc = val_auc[task_id]
                     step_num_descent = 0
                 else:
                     step_num_descent += 1
@@ -117,15 +117,15 @@ RANDOM_STATE = 42
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
 
+data_path='/scratch/tx443/CapstonePlated/Plated_Recipe_Tags_Predict/data/'
 
 # ### Get pre-trained embeddings
 # # encode the pretrained embedding to text file
 # model = KeyedVectors.load_word2vec_format('/home/hb1500/Plated/vocab.bin', binary=True)
 # model.save_word2vec_format('pretrained_embd.txt', binary=False)
 
-fname = '../../data/glove.6B.50d.txt'
+fname = '/scratch/tx443/CapstonePlated/data/glove.6B.50d.txt'
 words_emb_dict = load_emb_vectors(fname)
-
 
 # ### Load Cleaned Data 
 
@@ -139,7 +139,7 @@ tags = ['tag_cuisine_indian', 'tag_cuisine_nordic', 'tag_cuisine_european',
         'tag_cuisine_mediterranean', 'tag_cuisine_american',
         'tag_cuisine_middle-eastern']
 
-data_with_aug = pd.read_csv('../data/recipe_data_with_aug.csv', index_col=0)
+data_with_aug = pd.read_csv(data_path+'recipe_data_with_aug.csv', index_col=0)
 data_with_aug_tags = data_with_aug[steps+steps_aug+tags]
 print('column names of augmented data: ', data_with_aug_tags.columns)
 
