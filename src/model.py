@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from sklearn.metrics import roc_auc_score
+from collections import defaultdict
 
 def create_emb_layer(weights_matrix, trainable=False):
     vocab_size, emb_dim = weights_matrix.size()
@@ -70,25 +71,29 @@ class two_stage_RNN(nn.Module):
             logits[i] = self.classifiers_mlt[i](output)
         return logits
 
-
 def test_model(loader, model):
     """
     Help function that tests the model's performance on a dataset
     @param: loader - data loader for the dataset to test against
     """
-    logits_all = []
-    labels_all = []
+    logits_all_dict = defaultdict(list)
+    labels_all_dict = defaultdict(list)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model.eval()
     for steps_batch, lengths_batch, labels_batch in loader:
         for step_id in range(6):
-            lengths_batch[step_id] = lengths_batch[step_id].cuda()
-            steps_batch[step_id] = steps_batch[step_id].cuda() 
+            lengths_batch[step_id] = lengths_batch[step_id].to(device)
+            steps_batch[step_id] = steps_batch[step_id].to(device)
         logits = model(steps_batch, lengths_batch)
-        logits_all.extend(list(logits.cpu().detach().numpy()))
-        labels_all.extend(list(labels_batch.numpy()))
-    logits_all = np.array(logits_all)
-    labels_all = np.array(labels_all)
-    auc = roc_auc_score(labels_all, logits_all)
-    predicts = (logits_all > 0.5).astype(int)
-    acc = np.mean(predicts==labels_all)
+        for i in labels_batch.keys():
+            logits_all_dict[i].extend(list(logits[i].cpu().detach().numpy()))
+            labels_all_dict[i].extend(list(labels_batch[i].numpy()))
+    auc = []
+    acc = []
+    for i in labels_all_dict.keys():
+        logits_all_dict[i] = np.array(logits_all_dict[i])
+        labels_all_dict[i] = np.array(labels_all_dict[i])
+        auc.append(roc_auc_score(labels_all_dict[i], logits_all_dict[i])) 
+        predicts = (logits_all_dict[i] > 0.5).astype(int)
+        acc.append(np.mean(predicts==labels_all_dict[i]))
     return auc, acc

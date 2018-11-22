@@ -50,13 +50,15 @@ def collate_func(batch):
     data have the same length
     """
     steps_dict = defaultdict(list)
-    label_list = []
+    label_dict = defaultdict(list)
     length_dict = defaultdict(list)
     max_sent_len = []
     for datum in batch:
-        label_list.append(datum[-1])
+        for idx, task_label in enumerate(datum[-1]):
+            label_dict[idx].append(task_label)
         for i in range(6):
             length_dict[i].append(datum[1][i])
+    
     # padding
     for i in range(6):
         max_sent_len.append(max(length_dict[i]))
@@ -70,9 +72,11 @@ def collate_func(batch):
     
     for key in length_dict.keys():
         length_dict[key] = torch.LongTensor(length_dict[key])
-        steps_dict[key] = torch.from_numpy(np.array(steps_dict[key]).astype(np.int)) 
+        steps_dict[key] = torch.from_numpy(np.array(steps_dict[key]).astype(np.int))
+    for key in label_dict.keys():
+        label_dict[key] = torch.LongTensor(label_dict[key])
         
-    return [steps_dict, length_dict, torch.LongTensor(label_list)]
+    return [steps_dict, length_dict, label_dict]
 
 # Build train, valid and test dataloaders
 def create_dataset_obj(train,val,test,train_targets,val_targets,test_targets,
