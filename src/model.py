@@ -88,12 +88,12 @@ def test_model(loader, model):
         for i in labels_batch.keys():
             logits_all_dict[i].extend(list(logits[i].cpu().detach().numpy()))
             labels_all_dict[i].extend(list(labels_batch[i].numpy()))
-    auc = []
-    acc = []
+    auc = {}
+    acc = {}
     for i in labels_all_dict.keys():
         logits_all_dict[i] = np.array(logits_all_dict[i])
         labels_all_dict[i] = np.array(labels_all_dict[i])
-        auc.append(roc_auc_score(labels_all_dict[i], logits_all_dict[i])) 
+        auc[i] = roc_auc_score(labels_all_dict[i], logits_all_dict[i])
         predicts = (logits_all_dict[i] > 0.5).astype(int)
-        acc.append(np.mean(predicts==labels_all_dict[i]))
+        acc[i] = np.mean(predicts==labels_all_dict[i])
     return auc, acc

@@ -12,6 +12,7 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import roc_auc_score
 from gensim.models.keyedvectors import KeyedVectors
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 from embedding import load_emb_vectors, build_emb_weight
 from loadData import create_dataset_obj, collate_func
@@ -53,12 +54,15 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     train_loss_list = []
-    train_AUC_list = []
-    train_ACC_list = []
-    val_AUC_list = []
-    val_ACC_list = []
-    max_val_auc = 0
+    # train_AUC_list = defaultdict(float)
+    # train_ACC_list = defaultdict(float)
+    val_AUC_dict = defaultdict(list)
+    val_ACC_dict= defaultdict(list)
+    max_val_auc = defaultdict(float)
     step_max_descent = params['step_max_descent']
+
+    val_auc_mean = defaultdict(float)
+    val_acc_mean = defaultdict(float)
 
     for epoch in range(num_epochs):
         for i, (steps_batch, lengths_batch, labels_batch) in enumerate(train_loader):
@@ -85,8 +89,10 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
             # validate every 100 iterations
             if i % 10 == 0:
                 val_auc, val_acc = test_model(val_loader, model)
-                val_ACC_list.append(val_acc)
-                val_AUC_list.append(val_auc)
+                for key in val_auc.keys():
+                    val_ACC_dict[key].append(val_acc[key])
+                    val_AUC_dict[key].append(val_auc[key])
+
                 print('{}/{}, Step:{}/{}, TrainLoss:{:.6f}, ValAUC:{} ValAcc:{}'.format(
                     epoch+1, num_epochs, i+1, len(train_loader), loss, val_auc, val_acc))
                 
@@ -95,22 +101,28 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
                 # train_ACC_list.append(train_acc)
                 
                 # early stop
-                if max_val_auc < val_auc:
-                    max_val_auc = val_auc
+                flag_increase = False
+                for key in val_auc.keys():
+                    if max_val_auc[key] < val_auc[key]:
+                        max_val_auc[key] = val_auc[key]
+                        flag_increase = True
+                if flag_increase == True:
                     step_num_descent = 0
                 else:
                     step_num_descent += 1
+
                 if step_max_descent == step_num_descent:
                     print('early stop!')
                     break
         val_auc, val_acc = test_model(val_loader, model)
         train_auc, train_acc = test_model(train_loader, model)
-        print('Epoch: [{}/{}], trainAUC: {}, trainAcc: {}'.format(epoch+1, num_epochs, train_auc, train_acc))
-        print('Epoch: [{}/{}], ValAUC: {}, ValAcc: {}'.format(epoch+1, num_epochs, val_auc, val_acc))
+        print('Epoch: [{}/{}], trainAUC: {}, trainAcc: {}'.format(epoch+1, num_epochs, train_auc.values(), train_acc.values()))
+        print('Epoch: [{}/{}], ValAUC: {}, ValAcc: {}'.format(epoch+1, num_epochs, val_auc.values(), val_acc.values()))
         if step_max_descent == step_num_descent:
             break
-    val_auc_mean = np.mean(val_AUC_list[-step_max_descent*2+1:])
-    val_acc_mean = np.mean(val_ACC_list[-step_max_descent*2+1:])
+    for key in val_AUC_dict.keys():
+        val_auc_mean[key] = np.mean(val_AUC_dict[key][-step_max_descent*2-1:])
+        val_acc_mean[key] = np.mean(val_ACC_dict[key][-step_max_descent*21:])
     return val_auc_mean, val_acc_mean
 
 RANDOM_STATE = 42
@@ -251,7 +263,7 @@ params = dict(
 
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 k = 1 
-val_auc_kf = []
+val_auc_kf = defaultdict(list)
 for train_index, val_index in kf.split(train_val_data):
     print('===================== This is the Kfold {} ====================='.format(k))
     k += 1
@@ -296,5 +308,7 @@ for train_index, val_index in kf.split(train_val_data):
                                                            collate_func)
     
     val_auc, val_acc = train_model(params, emb_weight, train_loader, val_loader, test_loader)
-    val_auc_kf.append(val_auc)
+    for key in val_auc.keys():
+        val_auc_kf[key].append(val_auc[key])
+        
  
