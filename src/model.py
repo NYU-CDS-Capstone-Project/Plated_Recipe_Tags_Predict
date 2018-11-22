@@ -22,6 +22,7 @@ class two_stage_RNN(nn.Module):
         self.num_tasks = num_tasks
         self.hidden_dim1 = hidden_dim1
         self.hidden_dim2 = hidden_dim2
+        self.bi = bi	
 
         self.embedding, vocab_size, emb_dim = create_emb_layer(weights_matrix, trainable=False)
         
@@ -34,7 +35,7 @@ class two_stage_RNN(nn.Module):
             self.rnn_each_step.append(rnn_common)
         
         # module for the second stage
-        if bi:
+        if self.bi:
             self.steps_rnn = rnn_2(hidden_dim1*2, hidden_dim2, num_layers=1, batch_first=False)
         else:
             self.steps_rnn = rnn_2(hidden_dim1, hidden_dim2, num_layers=1, batch_first=False)
@@ -52,10 +53,10 @@ class two_stage_RNN(nn.Module):
             rnn_input = steps[i]
             emb = self.embedding(rnn_input) # embedding
             output, _ = self.rnn_each_step[i](emb) #, self.hidden_stage1[str(i)]
-            if bi:
+            if self.bi:
                 output_size = output.size()
                 output = output.view(output_size[0], output_size[1], 2, self.hidden_dim1)
-            if bi:
+            if self.bi:
                 output_each_step.append(torch.cat((output[:,-1,0,:],output[:,0,1,:]),1))
             else:
                 output_each_step.append(output[:,-1,:])
