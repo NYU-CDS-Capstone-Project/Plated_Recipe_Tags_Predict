@@ -122,7 +122,7 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
             break
     for key in val_AUC_dict.keys():
         val_auc_mean[key] = np.mean(val_AUC_dict[key][-step_max_descent*2-1:])
-        val_acc_mean[key] = np.mean(val_ACC_dict[key][-step_max_descent*21:])
+        val_acc_mean[key] = np.mean(val_ACC_dict[key][-step_max_descent*2-1:])
     return val_auc_mean, val_acc_mean
 
 RANDOM_STATE = 42
@@ -135,17 +135,13 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
 
 
+data_path='/scratch/tx443/CapstonePlated/Plated_Recipe_Tags_Predict/data/'
 # # Get Data 
 
 # In[3]:
 
-
-# fname = '../../data/glove.6B.50d.txt'
-# words_emb_dict = load_emb_vectors(fname)
-words_emb_dict = {'a': np.zeros(50)}
-
-
-# In[4]:
+fname = '/scratch/tx443/CapstonePlated/data/glove.6B.50d.txt'
+words_emb_dict = load_emb_vectors(fname)
 
 
 steps = ['step_one','step_two', 'step_three', 'step_four', 'step_five', 'step_six']
@@ -162,7 +158,7 @@ tags = ['tag_cuisine_indian', 'tag_cuisine_nordic', 'tag_cuisine_european',
 # In[5]:
 
 
-data_with_aug = pd.read_csv('../data/recipe_data_with_aug.csv', index_col=0)
+data_with_aug = pd.read_csv(data_path+'recipe_data_with_aug.csv', index_col=0)
 data_with_aug_tags = data_with_aug[steps+steps_aug+tags]
 print(data_with_aug_tags.columns)
 

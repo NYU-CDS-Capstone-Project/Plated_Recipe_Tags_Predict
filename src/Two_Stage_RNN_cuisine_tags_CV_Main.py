@@ -80,8 +80,8 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
             # validate every 10 iterations
             if i % 10 == 0:
                 val_auc, val_acc = test_model(val_loader, model)
-                val_ACC_list.append(val_acc)
-                val_AUC_list.append(val_auc)
+                val_ACC_list.append(val_acc[task_id])
+                val_AUC_list.append(val_auc[task_id])
                 print('{}/{}, Step:{}/{}, TrainLoss:{:.6f}, ValAUC:{} ValAcc:{}'.format(
                     epoch+1, num_epochs, i+1, len(train_loader), loss, val_auc, val_acc))
                 
@@ -104,8 +104,8 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
         print('Epoch: [{}/{}], ValAUC: {}, ValAcc: {}'.format(epoch+1, num_epochs, val_auc, val_acc))
         if step_max_descent == step_num_descent:
             break
-    val_auc_mean = np.mean(val_AUC_list[-step_max_descent*2+1:])
-    val_acc_mean = np.mean(val_ACC_list[-step_max_descent*2+1:])
+    val_auc_mean = np.mean(val_AUC_list[-step_max_descent*2-1:])
+    val_acc_mean = np.mean(val_ACC_list[-step_max_descent*2-1:])
     return val_auc_mean, val_acc_mean
 
 # main 
