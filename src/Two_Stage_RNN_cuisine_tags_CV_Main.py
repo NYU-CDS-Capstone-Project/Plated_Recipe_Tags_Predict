@@ -13,7 +13,7 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import roc_auc_score
 from gensim.models.keyedvectors import KeyedVectors
 import matplotlib.pyplot as plt
-
+from collections import defaultdict
 from embedding import load_emb_vectors, build_emb_weight
 from loadData import create_dataset_obj, collate_func
 from model import create_emb_layer, two_stage_RNN, test_model
@@ -50,7 +50,7 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
 
     # Criterion and Optimizer
     #pos_weight=torch.Tensor([40,]).cuda()
-    criterion = nn.BCEWithLogitsLoss() #torch.nn.BCELoss(); torch.nn.CrossEntropyLoss()
+    criterion = nn.BCEWithLogitsLoss(pos_weight = loss_weight) #torch.nn.BCELoss(); torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     train_loss_list = []
@@ -108,10 +108,40 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
     val_acc_mean = np.mean(val_ACC_list[-step_max_descent*2-1:])
     return val_auc_mean, val_acc_mean
 
+
+def final_eval(loader, model, threshold = 0.5):
+    """
+    Help function that tests the model's performance on a dataset
+    @param: loader - data loader for the dataset to test against
+    """
+    logits_all_dict = defaultdict(list)
+    labels_all_dict = defaultdict(list)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model.eval()
+    for steps_batch, lengths_batch, labels_batch in loader:
+        for step_id in range(6):
+            lengths_batch[step_id] = lengths_batch[step_id].to(device)
+            steps_batch[step_id] = steps_batch[step_id].to(device)
+        logits = model(steps_batch, lengths_batch)
+        for i in labels_batch.keys():
+            logits_all_dict[i].extend(list(logits[i].cpu().detach().numpy()))
+            labels_all_dict[i].extend(list(labels_batch[i].numpy()))
+    auc = {}
+    acc = {}
+    for i in labels_all_dict.keys():
+        logits_all_dict[i] = np.array(logits_all_dict[i])
+        labels_all_dict[i] = np.array(labels_all_dict[i])
+        auc[i] = roc_auc_score(labels_all_dict[i], logits_all_dict[i])
+        predicts = (logits_all_dict[i] > threshold).astype(int)
+        acc[i] = np.mean(predicts==labels_all_dict[i])
+    return acc, auc, #predicts, labels_all_dict
+
+
+
 # main 
 
 
-RANDOM_STATE = 42
+RANDOM_STATE = 20
 
 # get device
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -213,6 +243,7 @@ params = dict(
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 k = 1 
 val_auc_kf = []
+model_candidate_kf = []
 for train_index, val_index in kf.split(train_val_data):
     print('===================== This is the Kfold {} ====================='.format(k))
     k += 1
@@ -236,6 +267,7 @@ for train_index, val_index in kf.split(train_val_data):
     for row in val_data[tags_predicted].iterrows():
         val_targets.append(list(row[1].values))
     
+    loss_weight = torch.FloatTensor([len(train_targets)/np.sum(train_targets), 1]).to(device)
     train_X = train_data[steps_token]
     val_X = val_data[steps_token]
     test_X = test_data[steps_token]
@@ -254,11 +286,11 @@ for train_index, val_index in kf.split(train_val_data):
                                                            test_data_indices, train_targets,
                                                            val_targets, test_targets,
                                                            batch_size, max_sent_len, 
-                                                           collate_func)
+                                                           collate_func, )
     
-    val_auc, val_acc = train_model(params, emb_weight, train_loader, val_loader, test_loader, device)
+    val_auc, val_acc = train_model(params, emb_weight, train_loader, val_loader, test_loader, device, loss_weight)
     val_auc_kf.append(val_auc)
+    model_candidate_kf.append(model_to_test)
 
-
-
+    #final_eval(test_loader, model_candidate_kf[np.argmax(val_auc_kf)], threshold = 0.87)
 
