@@ -20,7 +20,7 @@ from model import create_emb_layer, two_stage_RNN, test_model
 from preprocess import tokenize_dataset, all_tokens_list, build_vocab, token2index_dataset 
 
 #build model
-def train_model(params, emb_weight, train_loader, val_loader, test_loader):
+def train_model(params, emb_weight, train_loader, val_loader, test_loader, loss_weights):
     rnn1_type = params['rnn1_type'] 
     rnn_1 = rnn_types[rnn1_type]
     rnn2_type = params['rnn2_type']
@@ -50,7 +50,14 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
 
     # Criterion and Optimizer
     #pos_weight=torch.Tensor([40,]).cuda()
-    criterion = nn.BCEWithLogitsLoss() #torch.nn.BCELoss(); torch.nn.CrossEntropyLoss()
+    criterion = {}
+    if loss_weights is None:
+        for i in range(num_tasks):
+            criterion[i] = nn.BCEWithLogitsLoss() #torch.nn.BCELoss(); torch.nn.CrossEntropyLoss()
+    else:
+        for i in range(num_tasks):
+            criterion[i] = nn.BCEWithLogitsLoss(loss_weight=loss_weights[i])
+
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     train_loss_list = []
@@ -75,12 +82,12 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
             if multi_task_train == 'mean_loss':
                 loss_list = []
                 for task_id in range(num_tasks):
-                    loss_list.append(criterion(logits[task_id], 
+                    loss_list.append(criterion[task_id](logits[task_id], 
                                           labels_batch[task_id].view(-1,1).float().to(device)))
                 loss= torch.mean(torch.stack(loss_list))
             elif multi_task_train == 'random_selection':
                 task_id = np.random.randint(0, num_tasks)
-                loss = criterion(logits[task_id], labels_batch[task_id].view(-1,1).float().to(device))
+                loss = criterion[task_id](logits[task_id], labels_batch[task_id].view(-1,1).float().to(device))
             else:
                 print('multi-task-train-method Error')
             train_loss_list.append(loss.item())
@@ -128,9 +135,6 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader):
 RANDOM_STATE = 42
 
 
-# In[2]:
-
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
 
@@ -138,7 +142,6 @@ print(device)
 data_path='/scratch/tx443/CapstonePlated/Plated_Recipe_Tags_Predict/data/'
 # # Get Data 
 
-# In[3]:
 
 fname = '/scratch/tx443/CapstonePlated/data/glove.6B.50d.txt'
 words_emb_dict = load_emb_vectors(fname)
@@ -185,47 +188,23 @@ for step in steps_aug:
     print(step, 'has been tokenized.')
 
 
-# In[7]:
-
-
 data_with_aug_tags = data_with_aug_tags[steps_token+steps_aug_token+tags]
-
-
-# In[8]:
-
-
 data_with_aug_tags.columns
 
 
 # # Split train, validation, test sets
-
-# In[9]:
-
-
 train_val_data, test_data = train_test_split(data_with_aug_tags, test_size=0.1, random_state=RANDOM_STATE)
 test_data = test_data[steps_token+tags]
 #train_data, val_data, train_tags, val_tags = train_test_split(X_train, y_train, test_size=0.1, random_state=RANDOM_STATE)
 
-
-# In[10]:
-
-
 aug2ori_colname = dict(zip(steps_aug_token+tags, steps_token+tags))
+tags_predicted = ['tag_cuisine_american', 'tag_cuisine_italian', 'tag_cuisine_asian', 'tag_cuisine_latin-american', 'tag_cuisine_french', 
+    'tag_cuisine_mediterranean', 'tag_cuisine_middle-eastern', 'tag_cuisine_indian', 'tag_cuisine_mexican']
 
-
-# In[11]:
-
-
-tags_predicted = ['tag_cuisine_american', 'tag_cuisine_italian', 'tag_cuisine_asian', 
-                 'tag_cuisine_latin-american','tag_cuisine_mediterranean']
 
 test_targets = []
 for row in test_data[tags_predicted].iterrows():
     test_targets.append(list(row[1].values))
-
-
-# In[12]:
-
 
 rnn_types = {
     'rnn': nn.RNN,
@@ -250,7 +229,8 @@ params = dict(
     step_max_descent = 3,
     
     add_data_aug = True,
-    cuda_on = True 
+    cuda_on = True,
+    
     )
 
 
