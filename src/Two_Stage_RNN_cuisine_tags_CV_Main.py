@@ -237,7 +237,8 @@ params = dict(
     step_max_descent = 3,
     
     add_data_aug = True,
-    cuda_on = True
+    cuda_on = True,
+    loss_weight_on = True 
     )
 
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
@@ -267,7 +268,10 @@ for train_index, val_index in kf.split(train_val_data):
     for row in val_data[tags_predicted].iterrows():
         val_targets.append(list(row[1].values))
     
-    loss_weight = torch.FloatTensor([len(train_targets)/np.sum(train_targets), 1]).to(device)
+    if params['loss_weight_on']:
+        loss_weight = torch.FloatTensor([len(train_targets)/np.sum(train_targets), 1]).to(device)
+    else:
+        loss_weight = None
     train_X = train_data[steps_token]
     val_X = val_data[steps_token]
     test_X = test_data[steps_token]
