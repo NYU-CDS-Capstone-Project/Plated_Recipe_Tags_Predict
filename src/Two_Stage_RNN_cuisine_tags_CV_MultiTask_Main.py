@@ -219,7 +219,7 @@ params = dict(
     num_epochs = 20,
     batch_size = 50,
     learning_rate = 0.01,
-    step_max_descent = 3,
+    step_max_descent = 10,
     
     add_data_aug = True,
     cuda_on = True,
@@ -257,11 +257,11 @@ for train_index, val_index in kf.split(train_val_data):
     for row in val_data[tags_predicted].iterrows():
         val_targets.append(list(row[1].values))
     
-    train_sample_num = len(train_tags)
+    train_sample_num = len(train_targets)
     if params['loss_weight_on']:
         loss_weights = {}
-        for idx in range(len(tags_predicted)):
-            loss_weights[i] = torch.Tensor([(train_sample_num-pos_num_tags[idx])/pos_num_tags[idx]]).to(device)
+        for task_id in range(len(tags_predicted)):
+            loss_weights[task_id] = torch.Tensor([(train_sample_num-pos_num_tags[task_id])/pos_num_tags[task_id]]).to(device)
     else:
         loss_weights = None
     train_X = train_data[steps_token]
@@ -284,7 +284,7 @@ for train_index, val_index in kf.split(train_val_data):
                                                            batch_size, max_sent_len, 
                                                            collate_func)
     
-    val_auc, val_acc, model_to_test = train_model(params, emb_weight, train_loader, val_loader, test_loader. loss_weights)
+    val_auc, val_acc, model_to_test = train_model(params, emb_weight, train_loader, val_loader, test_loader, loss_weights)
     model_candidate_kf.append(model_to_test)
     for key in val_auc.keys():
         val_auc_kf[key].append(val_auc[key])
