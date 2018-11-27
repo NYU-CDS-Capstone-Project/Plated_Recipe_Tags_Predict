@@ -106,7 +106,7 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, devic
             break
     val_auc_mean = np.mean(val_AUC_list[-step_max_descent*2-1:])
     val_acc_mean = np.mean(val_ACC_list[-step_max_descent*2-1:])
-    return val_auc_mean, val_acc_mean
+    return val_auc_mean, val_acc_mean, model
 
 
 def final_eval(loader, model, threshold = 0.5):
@@ -139,8 +139,6 @@ def final_eval(loader, model, threshold = 0.5):
 
 
 # main 
-
-
 RANDOM_STATE = 20
 
 # get device
@@ -292,7 +290,7 @@ for train_index, val_index in kf.split(train_val_data):
                                                            batch_size, max_sent_len, 
                                                            collate_func, )
     
-    val_auc, val_acc = train_model(params, emb_weight, train_loader, val_loader, test_loader, device, loss_weight)
+    val_auc, val_acc, model_to_test = train_model(params, emb_weight, train_loader, val_loader, test_loader, device, loss_weight)
     val_auc_kf.append(val_auc)
     model_candidate_kf.append(model_to_test)
 

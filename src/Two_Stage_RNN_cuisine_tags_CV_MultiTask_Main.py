@@ -56,7 +56,7 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, loss_
             criterion[i] = nn.BCEWithLogitsLoss() #torch.nn.BCELoss(); torch.nn.CrossEntropyLoss()
     else:
         for i in range(num_tasks):
-            criterion[i] = nn.BCEWithLogitsLoss(loss_weight=loss_weights[i])
+            criterion[i] = nn.BCEWithLogitsLoss(pos_weight=loss_weights[i])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -130,18 +130,14 @@ def train_model(params, emb_weight, train_loader, val_loader, test_loader, loss_
     for key in val_AUC_dict.keys():
         val_auc_mean[key] = np.mean(val_AUC_dict[key][-step_max_descent*2-1:])
         val_acc_mean[key] = np.mean(val_ACC_dict[key][-step_max_descent*2-1:])
-    return val_auc_mean, val_acc_mean
+    return val_auc_mean, val_acc_mean, model
 
 RANDOM_STATE = 42
-
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
 
-
 data_path='/scratch/tx443/CapstonePlated/Plated_Recipe_Tags_Predict/data/'
 # # Get Data 
-
 
 fname = '/scratch/tx443/CapstonePlated/data/glove.6B.50d.txt'
 words_emb_dict = load_emb_vectors(fname)
@@ -167,9 +163,6 @@ print(data_with_aug_tags.columns)
 
 
 # Tokenization
-
-# In[6]:
-
 
 print('Processing original instruction data')
 # tokenize each steps on original datasets
@@ -230,16 +223,15 @@ params = dict(
     
     add_data_aug = True,
     cuda_on = True,
-    
+    loss_weight_on = True
     )
-
-
-# In[14]:
-
 
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 k = 1 
+model_candidate_kf = []
 val_auc_kf = defaultdict(list)
+val_acc_kf = defaultdict(list)
+
 for train_index, val_index in kf.split(train_val_data):
     print('===================== This is the Kfold {} ====================='.format(k))
     k += 1
@@ -255,14 +247,23 @@ for train_index, val_index in kf.split(train_val_data):
         ##### add augmentation to training set by index #####
     else:
         train_data = train_data[steps_token+tags]
-    
+
+    pos_num_tags = np.zeros(shape=(len(tags_predicted),))
     train_targets = []
     for row in train_data[tags_predicted].iterrows():
+        pos_num_tags += row[1].values
         train_targets.append(list(row[1].values))
     val_targets = []
     for row in val_data[tags_predicted].iterrows():
         val_targets.append(list(row[1].values))
     
+    train_sample_num = len(train_tags)
+    if params['loss_weight_on']:
+        loss_weights = {}
+        for idx in range(len(tags_predicted)):
+            loss_weights[i] = torch.Tensor([(train_sample_num-pos_num_tags[idx])/pos_num_tags[idx]]).to(device)
+    else:
+        loss_weights = None
     train_X = train_data[steps_token]
     val_X = val_data[steps_token]
     test_X = test_data[steps_token]
@@ -283,8 +284,9 @@ for train_index, val_index in kf.split(train_val_data):
                                                            batch_size, max_sent_len, 
                                                            collate_func)
     
-    val_auc, val_acc = train_model(params, emb_weight, train_loader, val_loader, test_loader)
+    val_auc, val_acc, model_to_test = train_model(params, emb_weight, train_loader, val_loader, test_loader. loss_weights)
+    model_candidate_kf.append(model_to_test)
     for key in val_auc.keys():
         val_auc_kf[key].append(val_auc[key])
-        
+        val_acc_kf[key].append(val_acc[key])
  
