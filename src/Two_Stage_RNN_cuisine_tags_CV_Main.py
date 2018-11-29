@@ -267,7 +267,7 @@ for train_index, val_index in kf.split(train_val_data):
         val_targets.append(list(row[1].values))
     
     if params['loss_weight_on']:
-        loss_weight = torch.FloatTensor([len(train_targets)/np.sum(train_targets), 1]).to(device)
+        loss_weight = torch.FloatTensor([(len(train_targets)-np.sum(train_targets))/np.sum(train_targets), ]).to(device)
     else:
         loss_weight = None
     train_X = train_data[steps_token]
