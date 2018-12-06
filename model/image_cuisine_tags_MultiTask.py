@@ -167,7 +167,7 @@ def train_model(params, train_loader, val_loader, test_loader, loss_weights):
     num_tasks = len(tags_predicted)
     model = Image_CNN(num_tasks, hidden_dim, num_classes, train_resnet)
     # load pretrained data
-    im2recipe_resnet_pretrained = torch.load('model_e500_v-8.950.resnet.pth')
+    im2recipe_resnet_pretrained = torch.load('model/model_e500_v-8.950.resnet.pth')
     model_dict = model.state_dict()
     model_dict.update(im2recipe_resnet_pretrained['resnet50_im2recipe'])
     model.load_state_dict(model_dict)
@@ -262,19 +262,19 @@ def train_model(params, train_loader, val_loader, test_loader, loss_weights):
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
-image_data_path = '../data/images'
+image_data_path = 'data/images'
 
-data_recipe_image = pd.read_csv('../data/recipe_image_data_with_cuisineTags.csv', index_col=0)
+data_recipe_image = pd.read_csv('Plated_Recipe_Tags_Predict/data/recipe_image_data_with_cuisineTags.csv', index_col=0)
 
 #RANDOM_STATE = 42
 train, test_data= train_test_split(data_recipe_image, test_size=0.1)#, random_state=RANDOM_STATE)
 train_data, val_data = train_test_split(train, test_size=0.2) #, random_state=RANDOM_STATE)
 
-tags_predicted = ['tag_cuisine_asian',]
-# ['tag_cuisine_american', 'tag_cuisine_italian', 'tag_cuisine_asian', 
-#                   'tag_cuisine_latin-american', 'tag_cuisine_french', 
-#                   'tag_cuisine_mediterranean', 'tag_cuisine_middle-eastern', 
-#                   'tag_cuisine_indian', 'tag_cuisine_mexican']
+tags_predicted = ['tag_cuisine_american'] 
+#['tag_cuisine_american', 'tag_cuisine_italian', 'tag_cuisine_asian', 
+#                  'tag_cuisine_latin-american', 'tag_cuisine_french', 
+#                  'tag_cuisine_mediterranean', 'tag_cuisine_middle-eastern', 
+#                  'tag_cuisine_indian', 'tag_cuisine_mexican']
 test_targets = []
 for row in test_data[tags_predicted].iterrows():
     test_targets.append(list(row[1].values))
@@ -285,13 +285,13 @@ params = dict(
     hidden_dim = 30,
     num_classes = 1,
     
-    multi_task_train = 'mean_loss', #{'mean_loss', 'random_selection'}
+    multi_task_train = 'random_selection', #{'mean_loss', 'random_selection'}
     num_epochs = 5,
     batch_size = 30,
     learning_rate = 0.01,
     train_resnet = False,
     
-    step_max_descent = 4,
+    step_max_descent = 10,
     loss_weight_on = True
 )
 

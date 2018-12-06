@@ -86,7 +86,7 @@ def test_model(loader, model):
             steps_batch[step_id] = steps_batch[step_id].to(device)
         logits = model(steps_batch, lengths_batch)
         for i in labels_batch.keys():
-            logits_all_dict[i].extend(list(logits[i].cpu().detach().numpy()))
+            logits_all_dict[i].extend(list(F.sigmoid(logits[i]).cpu().detach().numpy()))
             labels_all_dict[i].extend(list(labels_batch[i].numpy()))
     auc = {}
     acc = {}
