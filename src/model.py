@@ -23,7 +23,7 @@ class two_stage_RNN(nn.Module):
         self.num_tasks = num_tasks
         self.hidden_dim1 = hidden_dim1
         self.hidden_dim2 = hidden_dim2
-        self.bi = bi	
+        self.bi = bi
 
         self.embedding, vocab_size, emb_dim = create_emb_layer(weights_matrix, trainable=False)
         
