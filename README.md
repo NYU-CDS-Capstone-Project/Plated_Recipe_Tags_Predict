@@ -16,11 +16,11 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 ## Work Process 
 - [x] Data Preprocessing and Analysis
 - [x] Model (baseline) on Intruction Data to predict crucines (binary and multi-tasking) 
-- [ ] Train Recipe Language Embeddings
-- [ ] Retrain and improve Intruction Model using pretrained embedding
-- [ ] Image processing
-- [ ] Build model for image representation 
-- [ ] Multi-tasking model to predict multiple tags
+- [x] Train Recipe Language Embeddings
+- [x] Retrain and improve Intruction Model using pretrained embedding
+- [x] Image processing
+- [x] Build model for image representation 
+- [x] Multi-tasking model to predict multiple tags
 
 ## Memo
 Our team collaborated with Plated. We have discussed our project in detail with the data science team from Plated, and Dr. Marchese meets with us weekly (biweekly  sometimes)  as our supervisor.  For our project, the main task is to predict tags for recipes and achieve reasonable embeddings at the same time. There are some classes for tags, such as cuisine style and difficulty level, and we have recipe data including text and pictures from Plated. With respect to evaluation, metrics, such as accuracy and AUC, will be used to measure results of our models. Besides, Plated may take advantage of hidden representation from our models to do recommendation and test the quality of hidden representation. 
