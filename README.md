@@ -28,7 +28,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 |Mexican |1.36% |0.67503 |0.70365 | 0.73999 |0.74288 |0.90554|
 
 #### Recipe Representation Visualization
-![Recipe Embedding](pics/Recipe Representation.png)
+![Recipe Embedding](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/pics/Recipe%20Representation.png)
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
