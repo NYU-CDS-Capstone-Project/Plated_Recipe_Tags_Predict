@@ -27,8 +27,8 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 |Indian |2.35% |0.78643 |0.87356 |0.73456 |0.87249 |0.88438|
 |Mexican |1.36% |0.67503 |0.70365 | 0.73999 |0.74288 |0.90554|
 
-#### Word Embedding Visualization: 
-
+#### Recipe Representation Visualization
+![Recipe Embedding](pics/Recipe Representation.png)
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
