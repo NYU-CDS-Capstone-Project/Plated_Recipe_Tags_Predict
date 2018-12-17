@@ -23,7 +23,7 @@ class two_stage_RNN(nn.Module):
         self.num_tasks = num_tasks
         self.hidden_dim1 = hidden_dim1
         self.hidden_dim2 = hidden_dim2
-        self.bi = bi	
+        self.bi = bi
 
         self.embedding, vocab_size, emb_dim = create_emb_layer(weights_matrix, trainable=False)
         
@@ -66,10 +66,11 @@ class two_stage_RNN(nn.Module):
         output1 = torch.stack(output_each_step, 0)
         output, _ = self.steps_rnn(output1) #, self.hidden_stage2
         output = output[-1,:,:]
+        emb_recipe = output
         logits = {}
         for i in range(self.num_tasks):
             logits[i] = self.classifiers_mlt[i](output)
-        return logits
+        return logits, emb_recipe
 
 def test_model(loader, model):
     """
@@ -84,9 +85,9 @@ def test_model(loader, model):
         for step_id in range(6):
             lengths_batch[step_id] = lengths_batch[step_id].to(device)
             steps_batch[step_id] = steps_batch[step_id].to(device)
-        logits = model(steps_batch, lengths_batch)
+        logits,_ = model(steps_batch, lengths_batch)
         for i in labels_batch.keys():
-            logits_all_dict[i].extend(list(logits[i].cpu().detach().numpy()))
+            logits_all_dict[i].extend(list(F.sigmoid(logits[i]).cpu().detach().numpy()))
             labels_all_dict[i].extend(list(labels_batch[i].numpy()))
     auc = {}
     acc = {}
@@ -97,3 +98,5 @@ def test_model(loader, model):
         predicts = (logits_all_dict[i] > 0.5).astype(int)
         acc[i] = np.mean(predicts==labels_all_dict[i])
     return auc, acc
+
+    

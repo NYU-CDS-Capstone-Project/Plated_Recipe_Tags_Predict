@@ -1,11 +1,6 @@
-# Predict Tags by Learning Recipe Embeddings  
+# Predict Tags by Learning Recipe Representation  
 
-This is capstone project repository collaborated with Plated. Our goal is to help Plated to build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We utilized mutiple deep learning models to obtain comprehensive recipe representations, then use the representation to predict multiple tags. 
-
-## Model
-* Recipe1M-instruction data: A Skip-Gram model to learn recipe language embeddings 
-* Cooking instruction data: A Two-Stage LSTM to obtain intruction embedding using self-pretrained recipe language embeddings
-* Dish Image: A deep neural network (Resnet 50) to learn recipe image representation
+This is capstone project repository collaborated with Plated. Our goal is to help Plated build a deep learning model to auto-generate recipe tags using both cooking instruction, dish images, and other data sources. We successfully build models on top of instruction data with high AUC, where we applied single-task to make prediction of 9 cuisine tags individually and a multi-task module to obtain comprehensive recipe representations then use the it to predict multiple tags all together.
 
 ## Data
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
@@ -13,19 +8,32 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * [Dish Images](/data/data_sample.pdf)
 * [Tags](/data/Tags_structure_self.csv): includes cuisine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
 
-## Work Process 
-- [x] Data Preprocessing and Analysis
-- [x] Model (baseline) on Intruction Data to predict crucines (binary and multi-tasking) 
-- [ ] Train Recipe Language Embeddings
-- [ ] Retrain and improve Intruction Model using pretrained embedding
-- [ ] Image processing
-- [ ] Build model for image representation 
-- [ ] Multi-tasking model to predict multiple tags
+## Model
+* Recipe1M-instruction data: A Skip-Gram model to learn recipe language embeddings (Domain-Edmbd)
+* Cooking instruction data: A Two-Stage LSTM/GRU to obtain intruction representation using self-pretrained recipe language/GloVe embeddings in both single-tasking and multi-tasking manner
+* Dish Image: A deep neural network (Resnet 50) to learn recipe image representation
 
-## Memo
-Our team collaborated with Plated. We have discussed our project in detail with the data science team from Plated, and Dr. Marchese meets with us weekly (biweekly  sometimes)  as our supervisor.  For our project, the main task is to predict tags for recipes and achieve reasonable embeddings at the same time. There are some classes for tags, such as cuisine style and difficulty level, and we have recipe data including text and pictures from Plated. With respect to evaluation, metrics, such as accuracy and AUC, will be used to measure results of our models. Besides, Plated may take advantage of hidden representation from our models to do recommendation and test the quality of hidden representation. 
+## Results
+#### Instruction Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction under Variance Settings
+| Cuisine Category| Tags Percentage	| GRU 	| GRU + Aug	| LSTM + Aug	| GRU + Domain-Edmbd + Aug|Multi-task |
+| :--- :|:---:	|:---:	|:---:	|:---:		|:---:		| :---: 	|
+|American |27.35% |0.80612 |0.81249 |0.79381 |0.69369 |0.74103|
+|Italian |23.33%| 0.88027 |0.91504 |0.89848| 0.80436 |0.85489|
+|Asian |18.22% |0.97855 |0.97919 |0.97982 |0.88072 |0.94860|
+|Latin-Ame |9.49% |0.90628 |0.94837 |0.85706 |0.92311 |0.93433|
+|French |7.74% |0.74977 |0.80471 |0.77272 |0.85640 |0.79605|
+| Mediterranean| 7.66% |0.73317 |0.75837 |0.72589 |0.75442 |0.79292|
+|Mid-east |4.63% |0.81138| 0.81850 |0.78675 |0.77870| 0.87369|
+|Indian |2.35% |0.78643 |0.87356 |0.73456 |0.87249 |0.88438|
+|Mexican |1.36% |0.67503 |0.70365 | 0.73999 |0.74288 |0.90554|
 
-So far, we have finished data collection, data cleaning and part of modeling work. We got all necessary data from Plated and preprocessed text data. With instruction data and cuisine tags, we have built binary classification models, and achieved above 80% AUC for most cuisine tags. Based on binary classification models, we have build a multi-task model for all cuisine tags, which outperforms the single binary classification model for some tags. Next, we plan to train ourself word embeddings in the recipe domain on Recipe1M and use image data in our model. 
+#### Image Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction
+| Cuisine Category| American | Italian| Asian|Latin-Ame|French|
+| :--- 	|:---:	|:---:	|:---:	|:---:	|:---:	|
+| AUC| 0.7719| 0.8810| 0.7411| 0.7235| 0.7188|
+
+#### Recipe Representation Visualization
+![Recipe Embedding](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/pics/Recipe%20Representation.png)
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
