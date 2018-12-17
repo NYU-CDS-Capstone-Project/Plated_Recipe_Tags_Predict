@@ -32,7 +32,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 | AUC| 0.7719| 0.8810| 0.7411| 0.7235| 0.7188|
 
 #### Recipe Representation Visualization
-![Recipe Embedding](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/pics/Recipe%20Representation.png)
+![Recipe Embedding](https://github.com/NYU-CDS-Capstone Project/Plated_Recipe_Tags_Predict/blob/master/pics/Recipe%20Representation.png){:height="50%" width="50%"}
 
 ## Related Project 
 [Learning Cross-modal Embeddings for Cooking Recipes and Food Images](http://pic2recipe.csail.mit.edu)
