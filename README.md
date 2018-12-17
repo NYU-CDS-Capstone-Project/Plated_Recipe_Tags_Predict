@@ -14,7 +14,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 * Dish Image: A deep neural network (Resnet 50) to learn recipe image representation
 
 ## Results
-#### K-fold (mean) Validation AUC on Cuisine Tag Prediction under Variance Settings
+#### Instruction Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction under Variance Settings
 | Cuisine Category| Tags Percentage	| GRU 	| GRU + Aug	| LSTM + Aug	| GRU + Domain-Edmbd + Aug|Multi-task |
 | :--- 				|:---:			|:---:	|:---:	|:---:		|:---:		| ---: 	|
 |American |27.35% |0.80612 |0.81249 |0.79381 |0.69369 |0.74103|
@@ -26,6 +26,10 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 |Mid-east |4.63% |0.81138| 0.81850 |0.78675 |0.77870| 0.87369|
 |Indian |2.35% |0.78643 |0.87356 |0.73456 |0.87249 |0.88438|
 |Mexican |1.36% |0.67503 |0.70365 | 0.73999 |0.74288 |0.90554|
+
+#### Image Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction
+| Cuisine Category| American | Italian| Asian|Latin-Ame|French|
+| AUC| 0.7719| 0.8810| 0.7411| 0.7235| 0.7188|
 
 #### Recipe Representation Visualization
 ![Recipe Embedding](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/pics/Recipe%20Representation.png)
