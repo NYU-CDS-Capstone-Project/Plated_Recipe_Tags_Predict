@@ -16,7 +16,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 ## Results
 #### Instruction Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction under Variance Settings
 | Cuisine Category| Tags Percentage	| GRU 	| GRU + Aug	| LSTM + Aug	| GRU + Domain-Edmbd + Aug|Multi-task |
-| :--- 				|:---:			|:---:	|:---:	|:---:		|:---:		| ---: 	|
+| :--- :|:---:	|:---:	|:---:	|:---:		|:---:		| :---: 	|
 |American |27.35% |0.80612 |0.81249 |0.79381 |0.69369 |0.74103|
 |Italian |23.33%| 0.88027 |0.91504 |0.89848| 0.80436 |0.85489|
 |Asian |18.22% |0.97855 |0.97919 |0.97982 |0.88072 |0.94860|
@@ -29,6 +29,7 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 
 #### Image Model -- K-fold (mean) Validation AUC on Cuisine Tag Prediction
 | Cuisine Category| American | Italian| Asian|Latin-Ame|French|
+| :--- 	|:---:	|:---:	|:---:	|:---:	|:---:	|
 | AUC| 0.7719| 0.8810| 0.7411| 0.7235| 0.7188|
 
 #### Recipe Representation Visualization
