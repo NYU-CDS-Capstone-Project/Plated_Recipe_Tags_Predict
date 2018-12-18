@@ -1,3 +1,5 @@
+# build model for image data
+
 import pandas as pd
 import numpy as np
 import torch
@@ -8,6 +10,9 @@ from sklearn.metrics import roc_auc_score
 from collections import defaultdict
 
 def create_emb_layer(weights_matrix, trainable=False):
+    '''
+    customize an embedding layer with embedding matrix
+    '''
     vocab_size, emb_dim = weights_matrix.size()
     emb_layer = nn.Embedding(vocab_size, emb_dim)
     emb_layer.load_state_dict({'weight': weights_matrix})
@@ -16,6 +21,9 @@ def create_emb_layer(weights_matrix, trainable=False):
     return emb_layer, vocab_size, emb_dim
 
 class two_stage_RNN(nn.Module):
+    '''
+    build two stage RNN model
+    '''
     def __init__(self, rnn_1, hidden_dim1, bi, rnn_2, hidden_dim2, batch_size, cuda_on, weights_matrix, num_tasks, num_classes):
         
         super(two_stage_RNN, self).__init__()
@@ -74,8 +82,7 @@ class two_stage_RNN(nn.Module):
 
 def test_model(loader, model):
     """
-    Help function that tests the model's performance on a dataset
-    @param: loader - data loader for the dataset to test against
+    test model on dataset
     """
     logits_all_dict = defaultdict(list)
     labels_all_dict = defaultdict(list)

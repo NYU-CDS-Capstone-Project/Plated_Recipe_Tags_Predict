@@ -1,3 +1,5 @@
+# build models for image data
+
 # coding: utf-8
 import pandas as pd
 import numpy as np
@@ -247,7 +249,6 @@ def train_model(params, train_loader, val_loader, test_loader, loss_weights):
                 if step_max_descent == step_num_descent:
                     print('early stop!')
                    # break
-            break
         val_auc, val_acc = test_model(val_loader, model)
         train_auc, train_acc = test_model(train_loader, model)
         print('Epoch: [{}/{}], trainAUC: {}, trainAcc: {}'.format(epoch+1, num_epochs, train_auc.values(), train_acc.values()))
@@ -273,7 +274,7 @@ data_recipe_image = pd.read_csv('Plated_Recipe_Tags_Predict/data/recipe_image_da
 train, test_data= train_test_split(data_recipe_image, test_size=0.1)#, random_state=RANDOM_STATE)
 train_data, val_data = train_test_split(train, test_size=0.2) #, random_state=RANDOM_STATE)
 
-tags_predicted = ['tag_cuisine_american',] 
+tags_predicted = ['tag_cuisine_mediterranean',] 
 #['tag_cuisine_american', 'tag_cuisine_italian', 'tag_cuisine_asian', 
 #                  'tag_cuisine_latin-american', 'tag_cuisine_french', 
 #                  'tag_cuisine_mediterranean', 'tag_cuisine_middle-eastern', 

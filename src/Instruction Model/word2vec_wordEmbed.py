@@ -1,3 +1,5 @@
+# use package to train word embeedding with recipe data
+
 import word2vec
 word2vec.word2vec(train='tokenized_instructions_train_with_plated.txt', 
                   output='vocab.bin', 
