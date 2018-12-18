@@ -1,3 +1,4 @@
+# process instruction data: tokenize, vocabulary, map between index and tokens
 import pandas as pd
 import numpy as np
 import string
