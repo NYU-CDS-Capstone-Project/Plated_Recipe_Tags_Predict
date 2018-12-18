@@ -4,8 +4,8 @@ This is capstone project repository collaborated with Plated. Our goal is to hel
 
 ## Data
 * [Recipe1M](http://im2recipe.csail.mit.edu/dataset/download/)
-* [Cooking Insturctions](/data/data_sample.pdf)
-* [Dish Images](/data/data_sample.pdf)
+* [Cooking Insturctions](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/src/data/data_sample.pdf)
+* [Dish Images](https://github.com/NYU-CDS-Capstone-Project/Plated_Recipe_Tags_Predict/blob/master/src/data/data_sample.pdf)
 * [Tags](/data/Tags_structure_self.csv): includes cuisine, cooking difficulty levels, [more](/data/Tags_structure_self.csv)
 
 ## Model
